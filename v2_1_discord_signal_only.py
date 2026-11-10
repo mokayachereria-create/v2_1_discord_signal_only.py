@@ -11,14 +11,11 @@ from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame, TimeFrameUnit
 
 # ==============================================================================
-# 1. CREDENTIALS (PULLS AUTOMATICALLY FROM GITHUB SECRETS)
+# 1. CREDENTIALS (EXPLICIT ENVIRONMENT & FALLBACK MAPPING)
 # ==============================================================================
-ALPACA_API_KEY    = os.getenv("ALPACA_API_KEY", "PKXTWMXAXEE6DFCUY6NK7LKYD")
-ALPACA_SECRET_KEY = os.getenv("ALPACA_SECRET_KEY", "71V22Yud2YbcoGShWyDzARvbf43ue81Vl")
-DISCORD_WEBHOOK   = os.getenv(
-    "DISCORD_WEBHOOK_URL",
-    "https://discord.com/api/webhooks/1569652500888555611/fIvTzvqnr2MXdIYcIxS40ny9Um5LluhIgT3eyV3D5_nClQKtLQaI38WpSnt20basU9gR"
-)
+ALPACA_API_KEY    = os.environ.get("ALPACA_API_KEY") or "PKXTWMXAXEE6DFCUY6NK7LKYD"
+ALPACA_SECRET_KEY = os.environ.get("ALPACA_SECRET_KEY") or "71V22Yud2YbcoGShWyDzARvbf43ue81Vl"
+DISCORD_WEBHOOK   = os.environ.get("DISCORD_WEBHOOK_URL") or "https://discord.com/api/webhooks/1569652500888555611/fIvTzvqnr2MXdIYcIxS40ny9Um5LluhIgT3eyV3D5_nClQKtLQaI38WpSnt20basU9gR"
 
 EST_TZ = pytz.timezone("America/New_York")
 EAT_TZ = pytz.timezone("Africa/Nairobi")
