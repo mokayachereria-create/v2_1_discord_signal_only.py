@@ -2,29 +2,28 @@ name: V2.1 NAS100 & US30 Autonomous Scanner
 
 on:
   schedule:
-    # Runs at 14:55 UTC (09:55 AM EST / 17:55 PM EAT) Monday through Friday
     - cron: '55 14 * * 1-5'
-  workflow_dispatch: # Allows you to test it instantly with 1 click
+  workflow_dispatch:
 
 jobs:
   run_scanner:
-  runs-on: ubuntu-latest
-  timeout-minutes: 105
-  steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    timeout-minutes: 105
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install Dependencies
-      run: pip install alpaca-py pandas numpy requests pytz
+      - name: Install Dependencies
+        run: pip install alpaca-py pandas numpy requests pytz
 
-    - name: Run V2.1 Signal Desk
-      env:
-        ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
-        ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: python v2_1_discord_signal_only.py
+      - name: Run V2.1 Signal Desk
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python v2_1_discord_signal_only.py
