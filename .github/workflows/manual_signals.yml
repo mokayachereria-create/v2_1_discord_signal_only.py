@@ -2,13 +2,15 @@ name: V2.1 NAS100 & US30 Autonomous Scanner
 
 on:
   schedule:
+    # Starts at 14:55 UTC (17:55 EAT) Monday-Friday and runs for 3 full hours
+    # Covers both 18:00-19:30 EAT and 10:00-11:30 AM EST (18:00-20:30 EAT)
     - cron: '55 14 * * 1-5'
   workflow_dispatch:
 
 jobs:
   run_scanner:
     runs-on: ubuntu-latest
-    timeout-minutes: 105
+    timeout-minutes: 180
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
