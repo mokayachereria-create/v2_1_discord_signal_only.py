@@ -1,29 +1,29 @@
-name: V2.1 NAS100 & US30 Autonomous Scanner
+name: V2.1 London/NY Scanner
 
 on:
   schedule:
-    # Starts at 14:55 UTC (17:55 EAT) Monday-Friday and runs for 3 full hours
-    # Covers both 18:00-19:30 EAT and 10:00-11:30 AM EST (18:00-20:30 EAT)
-    - cron: '55 14 * * 1-5'
+    # Run 1: London Session Start (7:00 AM UTC = 10:00 AM Kenya)
+    - cron: '0 7 * * 1-5'
+    # Run 2: New York Session Start (13:30 UTC = 4:30 PM Kenya)
+    - cron: '30 13 * * 1-5'
   workflow_dispatch:
 
 jobs:
-  run_scanner:
+  trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
-      - name: Install Dependencies
-        run: pip install alpaca-py pandas numpy requests pytz
+      - name: Install Quant Dependencies
+        run: pip install alpaca-py pandas numpy yfinance scipy numba requests
 
-      - name: Run V2.1 Signal Desk
+      - name: Execute V2.1 Scanner
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
