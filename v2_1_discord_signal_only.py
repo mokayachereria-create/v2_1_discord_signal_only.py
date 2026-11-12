@@ -267,12 +267,30 @@ def execute_v2_strategy(current_price, signal_direction, poc, gex_level):
         print(f"Execution error: {e}")
 
 # ==========================================
-# 7. GITHUB ACTIONS 6-HOUR LOOP
+# 7. GITHUB ACTIONS 6-HOUR LOOP (DIAGNOSTIC MODE)
 # ==========================================
 if __name__ == "__main__":
     print("V2.1 GitHub Actions Session Initiated...")
     
-    # Run loop for 5.9 hours to safely stay under GitHub's 6-hour runner limit
+    # 1. FORCE AN IMMEDIATE DISCORD TEST BEFORE LOOPING
+    print(f"Checking Webhook URL Length: {len(str(DISCORD_WEBHOOK_URL))} characters")
+    try:
+        test_payload = {"content": "⚡ V2.1 GitHub Runner is Online and Testing Webhook!"}
+        test_resp = requests.post(DISCORD_WEBHOOK_URL, json=test_payload, timeout=10)
+        print(f"Discord Initial Test Response: {test_resp.status_code}")
+        if test_resp.status_code != 204:
+            print(f"Discord Error Details: {test_resp.text}")
+    except Exception as e:
+        print(f"CRITICAL DISCORD ERROR: {e}")
+
+    # 2. VERIFY ALPACA DATA PIPELINE
+    try:
+        current_price, signal, poc, gex_support = generate_signals()
+        print(f"Initial Alpaca Data Pull -> Price: {current_price}, Signal: {signal}")
+    except Exception as e:
+        print(f"CRITICAL ALPACA ERROR: {e}")
+
+    # Run loop for 5.9 hours
     end_time = time.time() + (5.9 * 3600) 
     
     while time.time() < end_time:
@@ -287,7 +305,6 @@ if __name__ == "__main__":
                 timestamp = datetime.now().strftime('%H:%M:%S')
                 print(f"[{timestamp}] ⏳ Scanning QQQ Order Flow...")
                 
-            # Wait exactly 60 seconds before next scan
             time.sleep(60)
             
         except Exception as e:
@@ -295,3 +312,4 @@ if __name__ == "__main__":
             time.sleep(60)
             
     print("Session complete. Shutting down runner gracefully.")
+
